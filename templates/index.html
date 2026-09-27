@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Flight Fare Prediction System</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <header>
+    <h1>Flight Fare Prediction System</h1>
+    <div class="tabs">
+      <button class="tab-btn active" onclick="showTab('predict')">Predict Fare</button>
+      <button class="tab-btn" onclick="showTab('add')">Add New Data</button>
+    </div>
+  </header>
+
+  <main>
+    <!-- ============== PREDICT TAB ============== -->
+    <section id="predict-tab" class="tab-content active">
+      <form id="predict-form">
+        <label>Airline
+          <input type="text" name="airline" placeholder="e.g. Vistara" required>
+        </label>
+        <label>Source
+          <input type="text" name="source" placeholder="e.g. Mumbai" required>
+        </label>
+        <label>Destination
+          <input type="text" name="destination" placeholder="e.g. Chennai" required>
+        </label>
+        <label>Departure Time
+          <select name="departure" required>
+            <option>Early_Morning</option><option>Morning</option>
+            <option>Afternoon</option><option>Evening</option><option>Night</option>
+          </select>
+        </label>
+        <label>Arrival Time
+          <select name="arrival" required>
+            <option>Early_Morning</option><option>Morning</option>
+            <option>Afternoon</option><option>Evening</option><option>Night</option>
+          </select>
+        </label>
+        <label>Stops
+          <select name="stops" required>
+            <option value="zero">zero</option>
+            <option value="one">one</option>
+            <option value="two_or_more">two_or_more</option>
+          </select>
+        </label>
+        <label>Class
+          <select name="class" required>
+            <option>Economy</option><option>Business</option>
+          </select>
+        </label>
+        <label>Duration (hrs)
+          <input type="number" step="0.01" name="duration" required>
+        </label>
+        <label>Days Left
+          <input type="number" name="days_left" required>
+        </label>
+        <button type="submit">Predict Price</button>
+      </form>
+      <div id="predict-result" class="result"></div>
+    </section>
+
+    <!-- ============== ADD DATA TAB ============== -->
+    <section id="add-tab" class="tab-content">
+      <form id="add-form">
+        <!-- same fields as above, plus actual price -->
+        <label>Airline<input type="text" name="airline" required></label>
+        <label>Source<input type="text" name="source" required></label>
+        <label>Destination<input type="text" name="destination" required></label>
+        <label>Departure Time
+          <select name="departure" required>
+            <option>Early_Morning</option><option>Morning</option>
+            <option>Afternoon</option><option>Evening</option><option>Night</option>
+          </select>
+        </label>
+        <label>Arrival Time
+          <select name="arrival" required>
+            <option>Early_Morning</option><option>Morning</option>
+            <option>Afternoon</option><option>Evening</option><option>Night</option>
+          </select>
+        </label>
+        <label>Stops
+          <select name="stops" required>
+            <option value="zero">zero</option>
+            <option value="one">one</option>
+            <option value="two_or_more">two_or_more</option>
+          </select>
+        </label>
+        <label>Class
+          <select name="class" required><option>Economy</option><option>Business</option></select>
+        </label>
+        <label>Duration (hrs)<input type="number" step="0.01" name="duration" required></label>
+        <label>Days Left<input type="number" name="days_left" required></label>
+        <label>Actual Price (Rs. )<input type="number" name="price" required></label>
+        <button type="submit">Submit Record</button>
+      </form>
+      <div id="add-result" class="result"></div>
+    </section>
+  </main>
+
+<script>
+function showTab(tab) {
+  document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+  document.getElementById(tab + '-tab').classList.add('active');
+  event.target.classList.add('active');
+}
+
+async function postJSON(url, data) {
+  const res = await fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data)
+  });
+  return res.json();
+}
+
+document.getElementById('predict-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const data = Object.fromEntries(new FormData(e.target).entries());
+  const result = await postJSON('/predict', data);
+  document.getElementById('predict-result').innerText = result.predicted_price
+    ? `Predicted Fare: Rs. ${result.predicted_price}`
+    : `Error: ${result.error}`;
+});
+
+document.getElementById('add-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const data = Object.fromEntries(new FormData(e.target).entries());
+  const result = await postJSON('/add_data', data);
+  document.getElementById('add-result').innerText = result.message || `Error: ${result.error}`;
+  if (result.message) e.target.reset();
+});
+</script>
+</body>
+</html>

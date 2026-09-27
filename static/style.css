@@ -1,0 +1,17 @@
+* { box-sizing: border-box; font-family: Arial, Helvetica, sans-serif; }
+body { margin: 0; background: #f4f6f8; color: #222; }
+header { background: #1b2a4a; color: #fff; padding: 1.2rem 2rem; }
+header h1 { margin: 0 0 0.8rem 0; font-size: 1.4rem; }
+.tabs button { background: transparent; border: 1px solid #fff; color: #fff;
+  padding: 0.5rem 1rem; margin-right: 0.5rem; cursor: pointer; border-radius: 4px; }
+.tabs button.active { background: #fff; color: #1b2a4a; font-weight: bold; }
+main { max-width: 640px; margin: 2rem auto; padding: 1.5rem; background: #fff;
+  border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+form { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+label { display: flex; flex-direction: column; font-size: 0.85rem; color: #555; }
+input, select { margin-top: 0.3rem; padding: 0.5rem; border: 1px solid #ccc; border-radius: 4px; }
+button[type="submit"] { grid-column: 1 / -1; background: #1b2a4a; color: #fff; border: none;
+  padding: 0.7rem; border-radius: 4px; cursor: pointer; font-size: 1rem; }
+.result { margin-top: 1rem; font-weight: bold; color: #1b2a4a; }
